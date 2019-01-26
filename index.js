@@ -5,9 +5,9 @@ export default class DashbirdGraph extends LitElement {
     super()
   }
   play () {
-    console.log('play')
+    console.log('play!')
   }
-  _render () {
+  render () {
     return html`
       <style>
         :host {
