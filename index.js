@@ -13,19 +13,27 @@ export default class DashbirdGraph extends LitElement {
         :host {
           all: initial;
           font-family: sans-serif;
-          width: 200px;
-          height: 200px;
+          width: 500px;
+          height: 500px;
           display: block;
-          contain: content;
         }
         svg {
           width: 100%;
           height: 100%;
         }
+        circle {
+          fill: none;
+          stroke: rgba(255, 255, 255, 0.4);
+        }
+        text {
+          fill: white;
+          font-weight: 200;
+          font-size: 28px;
+        }
       </style>
-      <svg width="200" height="200" viewBox="0 0 200 200">
-        <rect x="0" y="0" width="200" height="200" fill="rgba(0,255,0,0.1)" />
-        <text x="20" y="35">Hello world</text>
+      <svg width="500" height="500" viewBox="0 0 500 500">
+        <text x="250" y="255" text-anchor="middle">Graph thing</text>
+        <circle cx="250" cy="250" r="150" />
       </svg>
     `
   }
