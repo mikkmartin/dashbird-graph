@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit-element'
 
-export class Graph extends LitElement {
+export default class DashbirdGraph extends LitElement {
   constructor() {
     super()
   }
@@ -30,3 +30,5 @@ export class Graph extends LitElement {
     `
   }
 }
+
+customElements.define('dashbird-graph', DashbirdGraph)
