@@ -1,0 +1,11 @@
+{
+  "name": "dashbird-graph",
+  "version": "0.0.2",
+  "description": "",
+  "main": "index.js",
+  "author": "Mikk Martin",
+  "license": "ISC",
+  "dependencies": {
+    "lit-element": "^2.0.0-rc.5"
+  }
+}
