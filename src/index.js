@@ -1,11 +1,32 @@
 import { html, LitElement } from 'lit-element'
 
+
 export default class DashbirdGraph extends LitElement {
+  static get properties() {
+    return {
+      autoPlay: {type: Boolean}
+    }
+  }
   constructor() {
     super()
   }
+  dependenciesMet () {
+    if (typeof TweenMax !== 'undefined') {
+      return true
+    } else {
+      console.error(`Dependancy 'TweenMax' not found for DashbirdGraph`)
+      return false
+    }
+  }
+  firstUpdated () {
+    if (this.dependenciesMet()) {
+      const text = this.shadowRoot.querySelector('text')
+      if (this.autoPlay) {
+        TweenMax.to(text, 1, {y: '-=100%', repeat: -1, yoyo: true})
+      }
+    }
+  }
   play () {
-    console.log('play!')
   }
   render () {
     return html`
