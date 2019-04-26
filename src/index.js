@@ -28,6 +28,7 @@ export default class DashbirdGraph extends LitElement {
     super()
     this.radius = 150
     this.apmlutude = 75
+    this.playing = false
   }
 
   dependenciesMet () {
@@ -41,21 +42,39 @@ export default class DashbirdGraph extends LitElement {
 
   firstUpdated () {
     if (this.dependenciesMet()) {
-      this.modifyDom()
+      this.setupLayers()
       this.renderNoiseLayer(this.generateNoise(noise.layer3), '#445980')
       this.renderNoiseLayer(this.generateNoise(noise.layer2), '#7A7A7A')
       this.renderNoiseLayer(this.generateNoise(noise.layer1), '#6B00FF')
-      if (this.autoPlay) this.animate()
+      this.animate()
     }
-  }
-
-  play () {
-    this.animate()
   }
 
   animate () {
     const c = this.shadowRoot.querySelector('.noise-line')
-    TweenMax.to(c, 20, {transformOrigin: '50% 50%', rotation: 360, repeat: -1, ease: Linear.easeNone})
+    let currentPoint = 0
+    const max = 99
+    const updatePoints = this.updatePoints
+
+    TweenMax.to(c, 20, {
+      transformOrigin: '50% 50%',
+      rotation: 360,
+      repeat: -1,
+      ease: Linear.easeNone,
+      onUpdate: function () {
+        if (currentPoint !== Math.floor(this.progress() * max) && currentPoint < max) {
+          updatePoints(currentPoint)
+          currentPoint++
+        } else if (currentPoint === max) {
+          updatePoints(currentPoint)
+          currentPoint = 0
+        }
+      }
+    })
+  }
+
+  updatePoints (point) {
+    console.log(`updatePoints(${point})`)
   }
 
   generatePoints (amount) {
@@ -81,7 +100,7 @@ export default class DashbirdGraph extends LitElement {
       }))
   }
 
-  modifyDom () {
+  setupLayers () {
     const svg = d3.select(this.shadowRoot.querySelector('svg')),
       w = +svg.attr('width'),
       h = +svg.attr('height')
@@ -91,15 +110,14 @@ export default class DashbirdGraph extends LitElement {
       .append('g')
       .attr('class', 'noise-line')
       .attr('transform', `translate(${w*.5}, ${h*.5})`)
-
       
+    //to get the center position correct for the rotation
     this.clip.append('circle')
       .attr('cx', 0)
       .attr('cy', 0)
       .attr('r', '350')
       .attr('fill', 'none')
       .attr('stroke', 'none')
-    
 
     this.line = d3.line()
       .curve(d3.curveCatmullRomClosed.alpha(.5))
@@ -142,7 +160,6 @@ export default class DashbirdGraph extends LitElement {
         <!-- graphics n shit -->
         <g fill="none" fill-rule="evenodd"><g transform="translate(82 82)"><circle stroke="#FFF" opacity=".2" cx="168" cy="168" r="100"/><circle stroke="#FFF" cx="168" cy="168" r="${this.radius - 5}"/><g transform="translate(150 128)"><path fill="#FFF" d="M0 56.141l15.647-29.128-1.868-5.127H8.372V15h9.94l12.096 33.117 5.245-2.105L38 52.453 26.605 57l-7.898-21.63L7.565 56.14z"/><rect fill="red" x="28" width="23" height="23" rx="11.5"/><text font-family="HelveticaNeue-Bold, Helvetica Neue" font-size="17" font-weight="bold" fill="#FFF"><tspan x="34.274" y="17">4</tspan></text></g></g><text font-family="RenoMono-Regular, Reno Mono" font-size="41" letter-spacing="-.976" fill="#FFF"><tspan x="71.957" y="68">12,412</tspan></text><text opacity=".5" font-family="RenoMono-Regular, Reno Mono" font-size="12" letter-spacing=".112" fill="#FFF"><tspan x="91.488" y="31">Total invocations</tspan></text></g>
         <!-- other shit -->
-
       </svg>
     `
   }
