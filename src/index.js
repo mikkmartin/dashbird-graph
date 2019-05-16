@@ -26,7 +26,7 @@ export default class DashbirdGraph extends LitElement {
   constructor() {
     super()
     this.circleResolution = 100
-    this.notificationCount = 2
+    this.notificationCount = 1
     this.invokeCount = 20
     this.animatedInvokeCount = 0
     this.radius = 150
@@ -138,8 +138,13 @@ export default class DashbirdGraph extends LitElement {
       onStart: () => {
         notificationNumber.innerHTML = this.notificationCount
         this.notificationCount = this.notificationCount+1
-        if (notificationNumber.innerHTML.toString().length > 1) {
-          notificationBubble.setAttribute('width', 32)
+        switch (notificationNumber.innerHTML.toString().length) {
+          case 2:
+            notificationBubble.setAttribute('width', 32)
+            break;
+          case 3:
+            notificationBubble.setAttribute('width', 42)
+            break;
         }
       }
     }).to(notification, .5, {
@@ -281,6 +286,11 @@ export default class DashbirdGraph extends LitElement {
         #test-dot {
           fill: #6B00FF;
         }
+        @media (max-width: 768px) {
+          .label {
+            display: none;
+          }
+        }
       </style>
       <svg width="500" height="500" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -289,16 +299,13 @@ export default class DashbirdGraph extends LitElement {
           </clipPath>
         </defs>
         <!-- graphics n shit -->
-        <g fill="none" fill-rule="evenodd"><g transform="translate(82 82)"><circle stroke="#FFF" opacity=".2" cx="168" cy="168" r="100"/><circle stroke="#FFF" cx="168" cy="168" r="${this.radius - 5}"/><g transform="translate(150 128)"><path fill="#FFF" d="M0 56.141l15.647-29.128-1.868-5.127H8.372V15h9.94l12.096 33.117 5.245-2.105L38 52.453 26.605 57l-7.898-21.63L7.565 56.14z"/></g></g><text part="label" font-family="RenoMono-Regular, Reno Mono" font-size="41" letter-spacing="-.976" fill="#FFF" text-anchor="end"><tspan x="228" y="68">12,412</tspan></text><text part="label" opacity=".5" font-family="RenoMono-Regular, Reno Mono" font-size="12" letter-spacing=".112" fill="#FFF"><tspan x="91.488" y="31">Total invocations</tspan></text></g>
+        <g fill="none" fill-rule="evenodd"><g transform="translate(82 82)"><circle stroke="#FFF" opacity=".2" cx="168" cy="168" r="100"/><circle stroke="#FFF" cx="168" cy="168" r="${this.radius - 5}"/><g transform="translate(150 128)"><path fill="#FFF" d="M0 56.141l15.647-29.128-1.868-5.127H8.372V15h9.94l12.096 33.117 5.245-2.105L38 52.453 26.605 57l-7.898-21.63L7.565 56.14z"/></g></g><text part="label" class="label" font-family="RenoMono-Regular, Reno Mono" font-size="41" letter-spacing="-.976" fill="#FFF" text-anchor="end"><tspan x="228" y="68">12,412</tspan></text><text part="label" class="label" opacity=".5" font-family="RenoMono-Regular, Reno Mono" font-size="12" letter-spacing=".112" fill="#FFF"><tspan x="91.488" y="31">Total invocations</tspan></text></g>
         <!-- other shit -->
         <line id="max-line" x1="250" y1="${this.amplitude*1.75}" x2="250" y2="${this.amplitude}" />
         <circle id="max-dot" cx="250" cy="${this.amplitude}" r="4" fill="white" />
         <g id="notification">
           <rect fill="red" x="260" y="210" width="23" height="23" rx="11.5"/>
-          <text font-family="HelveticaNeue-Bold, Helvetica Neue" font-size="17" font-weight="bold" fill="#FFF"><tspan x="266" y="227">4</tspan></text>
-        </g>
-        <g transform="translate(250 250)">
-          <!--<circle id="test-dot" cx="-100" cy="-130" r="3" fill="pink" />-->
+          <text font-family="sans-serif" font-size="17" font-weight="bold" fill="#FFF"><tspan x="266" y="227">4</tspan></text>
         </g>
       </svg>
     `
